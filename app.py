@@ -49,6 +49,28 @@ def reverse_string(input_string: str) -> str:
     """
     return input_string[::-1]
 
+def get_current_weather(date_str: str) -> str:
+    """
+    Returns weather information for a given date.
+    
+    Args:
+        date_str: A date string in format "YYYY-MM-DD"
+    
+    Returns:
+        Weather information as a string (e.g., "Sunny, 72°F" or "Rainy, 55°F")
+    """
+    try:
+        # Get today's date
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        # Check if the provided date matches today
+        if date_str == today:
+            return "Sunny, 72°F"
+        else:
+            return "Rainy, 55°F"
+    except Exception as e:
+        return f"Error retrieving weather: {str(e)}"
+
 def main():
     print("🚀 Welcome to the app!")
     
@@ -98,6 +120,13 @@ def main():
             name="reverse_string",
             func=reverse_string,
             description="Reverses a string. Input should be a single string."
+        ),
+        Tool(
+            name="get_weather",
+            func=get_current_weather,
+            description="Returns weather information for a given date. "
+                       "Input should be a date string formatted as 'YYYY-MM-DD' (e.g., '2026-02-24'). "
+                       "Returns weather conditions such as 'Sunny, 72°F' for today or other forecasted weather for different dates."
         )
     ]
     print("✅ Tools configured!")
@@ -112,7 +141,8 @@ def main():
     queries = [
         "What time is it right now?",
         "What is 25 * 4 + 10?",
-        "Reverse the string 'Hello World'"
+        "Reverse the string 'Hello World'",
+        "What's the weather like today?"
     ]
     
     print("\n" + "="*60)
@@ -121,7 +151,7 @@ def main():
     
     for query in queries:
         print(f"\n📝 Query: {query}")
-        print("-" * 60)
+        print("─" * 50)
         
         # Invoke agent with error handling
         try:
@@ -129,6 +159,10 @@ def main():
             print(f"✅ Agent Result: {result['output']}")
         except Exception as e:
             print(f"❌ Error executing agent: {str(e)}")
+        
+        print()
+    
+    print("🎉 Agent demo complete!")
 
 if __name__ == "__main__":
     main()
