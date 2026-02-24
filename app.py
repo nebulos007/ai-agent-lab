@@ -37,6 +37,18 @@ def get_current_time(input_str: str) -> str:
     """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+def reverse_string(input_string: str) -> str:
+    """
+    Reverses a string and returns the reversed version.
+    
+    Args:
+        input_string: The string to reverse
+    
+    Returns:
+        The reversed string
+    """
+    return input_string[::-1]
+
 def main():
     print("🚀 Welcome to the app!")
     
@@ -81,6 +93,11 @@ def main():
             description="Use this tool to get the current date and time. "
                        "Returns the current time in YYYY-MM-DD HH:MM:SS format. "
                        "Use this when you need to know what time it is right now."
+        ),
+        Tool(
+            name="reverse_string",
+            func=reverse_string,
+            description="Reverses a string. Input should be a single string."
         )
     ]
     print("✅ Tools configured!")
@@ -91,16 +108,27 @@ def main():
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
     print("✅ Agent created!")
     
-    # Test query
-    query = "What time is it right now?"
-    print(f"\n❓ Query: {query}")
+    # Test queries
+    queries = [
+        "What time is it right now?",
+        "What is 25 * 4 + 10?",
+        "Reverse the string 'Hello World'"
+    ]
     
-    # Invoke agent with error handling
-    try:
-        result = agent_executor.invoke({"input": query})
-        print(f"\n🤖 Agent Result: {result['output']}")
-    except Exception as e:
-        print(f"❌ Error executing agent: {str(e)}")
+    print("\n" + "="*60)
+    print("Running example queries:")
+    print("="*60)
+    
+    for query in queries:
+        print(f"\n📝 Query: {query}")
+        print("-" * 60)
+        
+        # Invoke agent with error handling
+        try:
+            result = agent_executor.invoke({"input": query})
+            print(f"✅ Agent Result: {result['output']}")
+        except Exception as e:
+            print(f"❌ Error executing agent: {str(e)}")
 
 if __name__ == "__main__":
     main()
