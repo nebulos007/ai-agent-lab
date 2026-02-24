@@ -1,4 +1,6 @@
 import os
+import warnings
+warnings.filterwarnings("ignore", message="urllib3 v2 only supports OpenSSL")
 from datetime import datetime
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -22,6 +24,18 @@ def calculator(expression: str) -> str:
         return str(result)
     except Exception as e:
         return f"Error evaluating expression: {str(e)}"
+
+def get_current_time(input_str: str) -> str:
+    """
+    Returns the current date and time in a formatted string.
+    
+    Args:
+        input_str: Input parameter (required by Tool interface, not used)
+    
+    Returns:
+        The current date and time as a formatted string (YYYY-MM-DD HH:MM:SS)
+    """
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def main():
     print("🚀 Welcome to the app!")
@@ -60,6 +74,13 @@ def main():
                        "Provide the expression as a string (e.g., '25 * 4 + 10'). "
                        "This tool is perfect for arithmetic operations, solving equations, "
                        "and verifying mathematical calculations."
+        ),
+        Tool(
+            name="get_current_time",
+            func=get_current_time,
+            description="Use this tool to get the current date and time. "
+                       "Returns the current time in YYYY-MM-DD HH:MM:SS format. "
+                       "Use this when you need to know what time it is right now."
         )
     ]
     print("✅ Tools configured!")
@@ -71,7 +92,7 @@ def main():
     print("✅ Agent created!")
     
     # Test query
-    query = "What is 25 * 4 + 10?"
+    query = "What time is it right now?"
     print(f"\n❓ Query: {query}")
     
     # Invoke agent with error handling
